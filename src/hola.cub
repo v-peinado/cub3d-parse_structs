@@ -1,0 +1,8 @@
+NO ./src/north.xpm
+SO ./src/south.xpm
+EA ./src/east.xpm
+WE ./src/west.xpm
+
+
+F 204,192,0
+C 225,30,1
