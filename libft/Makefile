@@ -6,7 +6,7 @@
 #    By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/03 14:27:33 by vpeinado          #+#    #+#              #
-#    Updated: 2024/02/22 21:49:10 by vpeinado         ###   ########.fr        #
+#    Updated: 2024/02/28 22:34:47 by vpeinado         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRCS  		= ft_bzero.c ft_isdigit.c ft_memcpy.c ft_strncmp.c ft_toupper.c \
 				ft_putstr_fd.c ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
 				ft_substr.c ft_striteri.c ft_strmapi.c ft_strtrim.c ft_split.c \
 				ft_itoa.c get_next_line.c get_next_line_utils.c \
-
+				ft_isdigit_string.c ft_freestr.c ft_arraylen.c 
 OBJS		= $(SRCS:.c=.o)
 
 BONUS		= ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c \

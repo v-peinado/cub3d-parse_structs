@@ -6,7 +6,7 @@
 /*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 13:49:27 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/02/22 19:00:31 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/02/28 22:40:17 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,20 @@ void		ft_putstr_fd(char *s, int fd);
 void		ft_putchar_fd(char c, int fd);
 void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
+void		ft_free_strs(char **strs);
 int			ft_lstsize(t_list *lst);
 int			ft_memcmp(const void *str1, const void *str2, size_t n);
 int			ft_isalnum(int argument);
 int			ft_isalpha(int argument);
 int			ft_isascii(int argument);
 int			ft_isdigit(int argument);
+int			ft_isdigit_string(char *str);
 int			ft_isprint(int argument);
 int			ft_tolower(int ch);
 int			ft_toupper(int ch);
 int			ft_strncmp(const char *str1, const char *str2, size_t n);
 int			ft_atoi(const char *str);
+int    		ft_arraylen(char **array);
 char		*ft_strchr(const char *str, int c);
 char		*ft_strrchr(const char *str, int c);
 char		*ft_strnstr(const char	*big, const char *little, size_t len);

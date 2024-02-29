@@ -8,6 +8,11 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
+# define SOUTH		0
+# define NORTH		1
+# define WEST		2
+# define EAST		3
+
 typedef struct s_map 
 {
 	int					width;
@@ -17,7 +22,8 @@ typedef struct s_map
 	char				player_dir;
 	unsigned int		floor;
 	unsigned int		ceiling;
-	char			**matrix;
+	char				**textures;
+	char				**matrix;
 }				t_map;
 
 typedef struct s_cub3d
