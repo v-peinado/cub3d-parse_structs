@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arraypush.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:47:21 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/02/29 23:38:58 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/01 19:24:09 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	**ft_arraypush(char **strs, char *str)
 {
 	int		i;
 	char	**new_strs;
-
+	
 	i = 0;
 	new_strs = malloc(sizeof(char *) * (ft_arraylen(strs) + 2));
 	if (!new_strs)

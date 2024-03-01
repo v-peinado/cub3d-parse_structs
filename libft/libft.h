@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 13:49:27 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/02/29 21:48:52 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/01 17:53:38 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,5 @@ char	*ft_read_to_stash(int fd, char *stash);
 char	*ft_get_line(char *stash);
 char	*ft_new_stash(char *stash);
 char	*ft_strjoin_gnl(char *s1, char *s2);
+char	*ft_strchr2(const char *s, int c);
 #endif

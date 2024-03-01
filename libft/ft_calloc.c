@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 15:06:54 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/02/22 19:54:44 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:35:44 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 
 void	*ft_calloc(size_t nitems, size_t size)
 {
-	void	*pointer;
-	size_t	i;
+	void	*ptr;
 
-	if (size  / size < nitems)
+	ptr = malloc(nitems * size);
+	if (!ptr)
 		return (NULL);
-	pointer = (void *) malloc(nitems * size);
-	if (!pointer)
-		return (NULL);
-	i = 0;
-	while (i < nitems * size)
-	{
-		*(unsigned char *)(pointer + i) = 0;
-		i++;
-	}
-	return (pointer);
+	ft_bzero(ptr, (nitems * size));
+	return (ptr);
 }

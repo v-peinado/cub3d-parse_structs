@@ -1,10 +1,10 @@
-NO ./src/north.xpm
-SO            ./src/south.xpm
+NO ./src/textures/north.xpm
+         SO            ./src/textures/south.xpm
 
 
 
-E                     ./src/east.xpm
-WE                                                       ./src/west.xpm
+E                     ./src/textures/east.xpm
+WE                                                       ./src/textures/west.xpm
 
 
 F                  204,192,0

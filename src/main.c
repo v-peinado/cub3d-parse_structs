@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 13:00:42 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/02/28 23:10:31 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:33:10 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,13 @@ int main(int argc, char **argv)
 {
     t_cub3d *cub3d;
     
-    if (!parse_args(&cub3d, argc, argv))
+    if (!parse_args(cub3d, argc, argv))
         printf("Error: wrong arguments\n");
     cub3d = init_cub3d(argv[1]);
-    return (0);
+    if (!cub3d)
+    {
+        perror("Malloc fail");
+        return EXIT_FAILURE;
+    }
+    return (EXIT_SUCCESS);
 }

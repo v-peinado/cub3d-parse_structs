@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+         #
+#    By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/03 14:27:33 by vpeinado          #+#    #+#              #
-#    Updated: 2024/02/29 22:14:10 by vpeinado         ###   ########.fr        #
+#    Updated: 2024/03/01 18:41:18 by vpeinado         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

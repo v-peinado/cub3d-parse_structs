@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 14:56:30 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/03/01 11:13:35 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/01 21:06:46 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int rgb_range(int rgb)
     return (0);
 }
 
-int *take_rgb(char *line, char c)
+int *take_rgb(char *line)
 {
     int *rgb;
     char **strs;
@@ -59,23 +59,23 @@ int rgb_to_hex(int *rgb)
     return (hex);
 }
 
-void fill_color(t_map *map, char *line, char c)
+void fill_color(t_map *map, char *line)
 {
     int *rgb;
     
-    if (c == 'C')
+    if (line[0] == 'C')
     {
-        rgb = take_rgb(line, c);
+        rgb = take_rgb(line);
         map->ceiling = rgb_to_hex(rgb);
     }
-    if (c == 'F')
+    if (line[0] == 'F')
     {
-        rgb = take_rgb(line, c);
+        rgb = take_rgb(line);
         map->floor = rgb_to_hex(rgb);
     }
 }
 
-void fill_texture(t_map *map, char *line, char c)
+void fill_texture(t_map *map, char *line)
 {
     if (line[0] == 'N' || (line[0] == 'N' && line[1] == 'O'))
         map->textures[NORTH] = ft_strtrim(line, "NO \t");
@@ -96,7 +96,7 @@ void fill_text_and_colors(t_map *map, char *path)
     
     fd = open(path, O_RDONLY);
     if (fd < 0)
-        printf("Error: open\n");
+        printf("Error: open colors\n");
     while(1)
     {
         line = get_next_line(fd);
@@ -105,9 +105,12 @@ void fill_text_and_colors(t_map *map, char *path)
         line = ft_strtrim(line, " \t\n");
         if (line[0] == 'N' || line[0] == 'S' || line[0] == 'E'
 			|| line[0] == 'W')
-			fill_texture(map, line, line[0]);
+            {
+                printf("%s\n", line);
+			fill_texture(map, line);
+            }
 		if (line[0] == 'C' || line[0] == 'F')
-			fill_color(map, line, line[0]);
+			fill_color(map, line);
         free(line);
     }
     close(fd);
@@ -120,7 +123,7 @@ void fill_matrix(t_map *map, char *path)
     
     fd = open(path, O_RDONLY);
     if (fd < 0)
-        printf("Error: open\n");
+        printf("Error: open matrix\n");
     while(1)
     {
         line = get_next_line(fd);
@@ -133,7 +136,7 @@ void fill_matrix(t_map *map, char *path)
             if (!map->matrix)
             {
                 printf("Error: matrix malloc\n");
-                return ;
+                //return (NULL);
             }
             map->height++;   
         }
@@ -142,47 +145,53 @@ void fill_matrix(t_map *map, char *path)
     close(fd);
 }
 
-t_map map(char *path)
+t_map *map(char *path)
 {
-    t_map map;
+    t_map *map;
     
-    map.textures = malloc(sizeof(char *) * 4);
-    if (map.textures == NULL)
+    map = malloc(sizeof(t_map));
+    map->textures = ft_calloc(4, sizeof(char *));
+    if (map->textures == NULL)
     {
         printf("Error: malloc\n");
-        return ;
+        return NULL;
     }
-    map.matrix = malloc(sizeof(char *) * 1);
-    if (map.matrix == NULL) 
+    map->matrix = ft_calloc(1, sizeof(char *));
+    if (map->matrix == NULL) 
     {
         printf("Error: matrix malloc\n");
-        return ;
+        return NULL;
     }
-    fill_text_and_colors(&map, path);
-    fill_matrix(&map, path);
+    fill_text_and_colors(map, path);
+    fill_matrix(map, path);
     //fill_player_vars(&map, path);
     //validate_map(&map);
-    printf("ceiling: %x\n", map.ceiling);
-    printf("floor: %x\n", map.floor);
-    printf("texture: %s\n", map.textures[NORTH]);
-    printf("texture: %s\n", map.textures[SOUTH]);
-    printf("texture: %s\n", map.textures[WEST]);
-    printf("texture: %s\n", map.textures[EAST]);
-    printf("matrix: %s\n", map.matrix[0]);
-    printf("matrix: %s\n", map.matrix[1]);
-    printf("matrix: %s\n", map.matrix[2]);
-    printf("matrix: %s\n", map.matrix[3]);
+    
+    printf("ceiling: %x\n", map->ceiling);
+    printf("floor: %x\n", map->floor);
+    printf("texture: %s\n", map->textures[NORTH]);
+    printf("texture: %s\n", map->textures[SOUTH]);
+    printf("texture: %s\n", map->textures[WEST]);
+    printf("texture: %s\n", map->textures[EAST]);
+    printf("matrix: %s\n", map->matrix[0]);
+    printf("matrix: %s\n", map->matrix[1]);
+    printf("matrix: %s\n", map->matrix[2]);
+    printf("matrix: %s\n", map->matrix[3]);
+    
     return (map);
 }
 
-t_cub3d init_cub3d(char *path)
+t_cub3d *init_cub3d(char *path)
 {
     t_cub3d *cub3d;
     cub3d = ft_calloc(1, sizeof(t_cub3d));
     if (!cub3d)
     {
         printf("Error: malloc\n");
-        return ;
+        return(NULL) ;
     }
     cub3d->map = map(path);
+    if (!cub3d->map)
+        return (NULL);
+    return (cub3d);
 }
