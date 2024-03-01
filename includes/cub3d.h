@@ -7,6 +7,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <stdbool.h>
 
 # define SOUTH		0
 # define NORTH		1
