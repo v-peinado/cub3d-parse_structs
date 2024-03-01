@@ -6,11 +6,18 @@
 /*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 14:56:30 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/02/29 20:10:03 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/01 11:13:35 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int rgb_range(int rgb)
+{
+    if (rgb < 0 || rgb > 255)
+        return (1);
+    return (0);
+}
 
 int *take_rgb(char *line, char c)
 {
@@ -22,8 +29,6 @@ int *take_rgb(char *line, char c)
     rgb = malloc(sizeof(int) * 3);
     if (!rgb)
         return (NULL);
-    //while(line[i] == ' ' || line[i] == '\t' || line[i] == c)
-        //i++;
     line = ft_strtrim(line, "CF \t");
     strs = ft_split(line + i, ',');
     if (!strs)
@@ -31,12 +36,17 @@ int *take_rgb(char *line, char c)
     if (ft_arraylen(strs) != 3 || !ft_isdigit_string(strs[0])
         || !ft_isdigit_string(strs[1]) || !ft_isdigit_string(strs[2]))
     {
-        printf("Error: bad rgb\n");
+        printf("Error: bad rgb, the args not 3 or not digit\n");
         return (NULL);
     }
     rgb[0] = ft_atoi(strs[0]);
     rgb[1] = ft_atoi(strs[1]);
     rgb[2] = ft_atoi(strs[2]);
+    if (rgb_range(rgb[0]) || rgb_range(rgb[1]) || rgb_range(rgb[2]))
+    {
+        printf("Error: bad rgb,not <255 && >0\n");
+        return (NULL);
+    }
     ft_free_strs(strs);
     return (rgb);
 }
@@ -87,12 +97,6 @@ void fill_text_and_colors(t_map *map, char *path)
     fd = open(path, O_RDONLY);
     if (fd < 0)
         printf("Error: open\n");
-    map->textures = malloc(4 * sizeof(char *));
-    if (!map->textures)
-    {
-        printf("Error: malloc\n");
-        return ;
-    }
     while(1)
     {
         line = get_next_line(fd);
@@ -106,34 +110,68 @@ void fill_text_and_colors(t_map *map, char *path)
 			fill_color(map, line, line[0]);
         free(line);
     }
-    printf("ceiling: %x\n", map->ceiling);
-    printf("floor: %x\n", map->floor);
-    printf("texture: %s\n", map->textures[NORTH]);
-    printf("texture: %s\n", map->textures[SOUTH]);
-    printf("texture: %s\n", map->textures[WEST]);
-    printf("texture: %s\n", map->textures[EAST]);
     close(fd);
 }
 
 void fill_matrix(t_map *map, char *path)
 {
-    map->matrix = ft_calloc(1, sizeof(char *));
-    if (!map->matrix)
-    {
-        printf("Error: malloc\n");
-        return ;
-    }
+    int fd;
+    char *line;
     
+    fd = open(path, O_RDONLY);
+    if (fd < 0)
+        printf("Error: open\n");
+    while(1)
+    {
+        line = get_next_line(fd);
+        if (!line)
+            break ;
+        line = ft_strtrim(line, "\t\n");
+        if (line[0] == '1')
+        {
+            map->matrix = ft_arraypush(map->matrix, ft_strdup(line));
+            if (!map->matrix)
+            {
+                printf("Error: matrix malloc\n");
+                return ;
+            }
+            map->height++;   
+        }
+        free(line);
+    }
+    close(fd);
 }
 
 t_map map(char *path)
 {
     t_map map;
     
+    map.textures = malloc(sizeof(char *) * 4);
+    if (map.textures == NULL)
+    {
+        printf("Error: malloc\n");
+        return ;
+    }
+    map.matrix = malloc(sizeof(char *) * 1);
+    if (map.matrix == NULL) 
+    {
+        printf("Error: matrix malloc\n");
+        return ;
+    }
     fill_text_and_colors(&map, path);
-    //fill_matrix(&map, path);
+    fill_matrix(&map, path);
     //fill_player_vars(&map, path);
     //validate_map(&map);
+    printf("ceiling: %x\n", map.ceiling);
+    printf("floor: %x\n", map.floor);
+    printf("texture: %s\n", map.textures[NORTH]);
+    printf("texture: %s\n", map.textures[SOUTH]);
+    printf("texture: %s\n", map.textures[WEST]);
+    printf("texture: %s\n", map.textures[EAST]);
+    printf("matrix: %s\n", map.matrix[0]);
+    printf("matrix: %s\n", map.matrix[1]);
+    printf("matrix: %s\n", map.matrix[2]);
+    printf("matrix: %s\n", map.matrix[3]);
     return (map);
 }
 
