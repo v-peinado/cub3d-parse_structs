@@ -6,11 +6,17 @@
 /*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 14:56:30 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/03/01 21:06:46 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/02 13:17:26 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void print_error()
+{
+    perror("Error");
+    exit(EXIT_FAILURE);
+}
 
 int rgb_range(int rgb)
 {
@@ -35,18 +41,12 @@ int *take_rgb(char *line)
         return (NULL);
     if (ft_arraylen(strs) != 3 || !ft_isdigit_string(strs[0])
         || !ft_isdigit_string(strs[1]) || !ft_isdigit_string(strs[2]))
-    {
-        printf("Error: bad rgb, the args not 3 or not digit\n");
-        return (NULL);
-    }
+            print_error();
     rgb[0] = ft_atoi(strs[0]);
     rgb[1] = ft_atoi(strs[1]);
     rgb[2] = ft_atoi(strs[2]);
     if (rgb_range(rgb[0]) || rgb_range(rgb[1]) || rgb_range(rgb[2]))
-    {
-        printf("Error: bad rgb,not <255 && >0\n");
-        return (NULL);
-    }
+        print_error();
     ft_free_strs(strs);
     return (rgb);
 }
@@ -77,16 +77,16 @@ void fill_color(t_map *map, char *line)
 
 void fill_texture(t_map *map, char *line)
 {
-    if (line[0] == 'N' || (line[0] == 'N' && line[1] == 'O'))
+    if ((line[0] == 'N' && line[1] == ' ') || (line[0] == 'N' && line[1] == 'O'))
         map->textures[NORTH] = ft_strtrim(line, "NO \t");
-    else if (line[0] == 'S' || (line[0] == 'S' && line[1] == 'O'))
+    else if ((line[0] == 'S' && line[1] == ' ') || (line[0] == 'S' && line[1] == 'O'))
         map->textures[SOUTH] = ft_strtrim(line, "SO \t");
-    else if (line[0] == 'W' || (line[0] == 'W' && line[1] == 'E'))
+    else if ((line[0] == 'W' && line[1] == ' ') || (line[0] == 'W' && line[1] == 'E'))
         map->textures[WEST] = ft_strtrim(line, "WE \t");
-    else if (line[0] == 'E' || (line[0] == 'E' && line[1] == 'A'))
+    else if ((line[0] == 'E' && line[1] == ' ') || (line[0] == 'E' && line[1] == 'A'))
         map->textures[EAST] = ft_strtrim(line, "EA \t");
     else
-        printf("Error: bad texture\n");
+        print_error();
 }
 
 void fill_text_and_colors(t_map *map, char *path)
@@ -96,7 +96,7 @@ void fill_text_and_colors(t_map *map, char *path)
     
     fd = open(path, O_RDONLY);
     if (fd < 0)
-        printf("Error: open colors\n");
+        print_error();
     while(1)
     {
         line = get_next_line(fd);
@@ -106,7 +106,6 @@ void fill_text_and_colors(t_map *map, char *path)
         if (line[0] == 'N' || line[0] == 'S' || line[0] == 'E'
 			|| line[0] == 'W')
             {
-                printf("%s\n", line);
 			fill_texture(map, line);
             }
 		if (line[0] == 'C' || line[0] == 'F')
@@ -116,6 +115,21 @@ void fill_text_and_colors(t_map *map, char *path)
     close(fd);
 }
 
+int matrix_line(char *line)
+{
+    int i = 0;
+    while((line[i] == '0' || line[i] == '1' || line[i] == ' ') &&  line[i]!= '\0')
+    {
+        if(line[i] == ' ')
+            line[i] = '0';
+        i++;
+    }
+    if (i == (int)ft_strlen(line) && i != 0)
+        return (1);
+    else
+        return(0);
+}
+
 void fill_matrix(t_map *map, char *path)
 {
     int fd;
@@ -123,21 +137,19 @@ void fill_matrix(t_map *map, char *path)
     
     fd = open(path, O_RDONLY);
     if (fd < 0)
-        printf("Error: open matrix\n");
+        print_error();
     while(1)
     {
         line = get_next_line(fd);
         if (!line)
             break ;
         line = ft_strtrim(line, "\t\n");
-        if (line[0] == '1')
+        if (matrix_line(line))
         {
+            printf("linea: %s\n", line);
             map->matrix = ft_arraypush(map->matrix, ft_strdup(line));
             if (!map->matrix)
-            {
-                printf("Error: matrix malloc\n");
-                //return (NULL);
-            }
+                print_error();
             map->height++;   
         }
         free(line);
@@ -152,16 +164,10 @@ t_map *map(char *path)
     map = malloc(sizeof(t_map));
     map->textures = ft_calloc(4, sizeof(char *));
     if (map->textures == NULL)
-    {
-        printf("Error: malloc\n");
-        return NULL;
-    }
+        print_error();
     map->matrix = ft_calloc(1, sizeof(char *));
     if (map->matrix == NULL) 
-    {
-        printf("Error: matrix malloc\n");
-        return NULL;
-    }
+        print_error();
     fill_text_and_colors(map, path);
     fill_matrix(map, path);
     //fill_player_vars(&map, path);
@@ -187,8 +193,7 @@ t_cub3d *init_cub3d(char *path)
     cub3d = ft_calloc(1, sizeof(t_cub3d));
     if (!cub3d)
     {
-        printf("Error: malloc\n");
-        return(NULL) ;
+       print_error();
     }
     cub3d->map = map(path);
     if (!cub3d->map)
