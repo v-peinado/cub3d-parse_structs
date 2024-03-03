@@ -6,7 +6,7 @@
 /*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 14:56:30 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/03/02 13:17:26 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/03 15:39:56 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,15 @@ void fill_text_and_colors(t_map *map, char *path)
 int matrix_line(char *line)
 {
     int i = 0;
-    while((line[i] == '0' || line[i] == '1' || line[i] == ' ') &&  line[i]!= '\0')
+    while((line[i] == '0' || line[i] == '1' || line[i] == ' '
+            || line[i] == 'N' || line[i] == 'S' || line[i] == 'E'
+            || line[i] == 'W') &&  line[i]!= '\0')
     {
         if(line[i] == ' ')
             line[i] = '0';
         i++;
     }
+
     if (i == (int)ft_strlen(line) && i != 0)
         return (1);
     else
@@ -146,22 +149,43 @@ void fill_matrix(t_map *map, char *path)
         line = ft_strtrim(line, "\t\n");
         if (matrix_line(line))
         {
-            printf("linea: %s\n", line);
             map->matrix = ft_arraypush(map->matrix, ft_strdup(line));
             if (!map->matrix)
                 print_error();
-            map->height++;   
+            if ((int)ft_strlen(line) > map->width)
+                map->width = (int)ft_strlen(line);
+            map->height++;      
         }
         free(line);
     }
     close(fd);
 }
-
+void fill_player_vars(t_map *map)
+{
+    int i = 0;
+    int j = 0;
+    
+    while(map->matrix[i] != NULL)
+    {
+        while(map->matrix[i][j] != '\0')
+        {
+            if(map->matrix[i][j] == 'N' || map->matrix[i][j] == 'S'
+                || map->matrix[i][j] == 'E' || map->matrix[i][j] == 'W')
+            {
+                map->player_x = j;
+                map->player_y = i;
+                map->player_dir = map->matrix[i][j];
+            }   
+            j++;
+        }
+        i++;
+    }
+}
 t_map *map(char *path)
 {
     t_map *map;
-    
-    map = malloc(sizeof(t_map));
+
+    map = ft_calloc(1, sizeof(t_map *));
     map->textures = ft_calloc(4, sizeof(char *));
     if (map->textures == NULL)
         print_error();
@@ -170,7 +194,7 @@ t_map *map(char *path)
         print_error();
     fill_text_and_colors(map, path);
     fill_matrix(map, path);
-    //fill_player_vars(&map, path);
+    fill_player_vars(map);
     //validate_map(&map);
     
     printf("ceiling: %x\n", map->ceiling);
@@ -183,7 +207,11 @@ t_map *map(char *path)
     printf("matrix: %s\n", map->matrix[1]);
     printf("matrix: %s\n", map->matrix[2]);
     printf("matrix: %s\n", map->matrix[3]);
-    
+    printf("height: %d\n", map->height);
+    printf("width: %d\n", map->width);
+    printf("player_x: %d\n", map->player_x);
+    printf("player_y: %d\n", map->player_y);
+    printf("player_dir: %c\n", map->player_dir);
     return (map);
 }
 
