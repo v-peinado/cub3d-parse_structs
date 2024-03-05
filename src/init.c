@@ -6,15 +6,16 @@
 /*   By: vpeinado <vpeinado@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 14:56:30 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/03/03 15:39:56 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/05 19:49:48 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void print_error()
+void print_error(char *err_msg)
 {
-    perror("Error");
+    //perror(err_msg);
+    printf("Error: %s", err_msg);
     exit(EXIT_FAILURE);
 }
 
@@ -41,12 +42,12 @@ int *take_rgb(char *line)
         return (NULL);
     if (ft_arraylen(strs) != 3 || !ft_isdigit_string(strs[0])
         || !ft_isdigit_string(strs[1]) || !ft_isdigit_string(strs[2]))
-            print_error();
+            print_error("El color debe tener 3 componentes, compuestas de numeros");
     rgb[0] = ft_atoi(strs[0]);
     rgb[1] = ft_atoi(strs[1]);
     rgb[2] = ft_atoi(strs[2]);
     if (rgb_range(rgb[0]) || rgb_range(rgb[1]) || rgb_range(rgb[2]))
-        print_error();
+        print_error("Debe ser rgb valido, 255 < 0");
     ft_free_strs(strs);
     return (rgb);
 }
@@ -86,7 +87,23 @@ void fill_texture(t_map *map, char *line)
     else if ((line[0] == 'E' && line[1] == ' ') || (line[0] == 'E' && line[1] == 'A'))
         map->textures[EAST] = ft_strtrim(line, "EA \t");
     else
-        print_error();
+        print_error("malloc");
+}
+
+void validate_text(char **textures_arr)
+{
+    int i;
+    
+    i = 0 ;
+    while (i < 4)
+    {
+        if (ft_strncmp(textures_arr[i] + ft_strlen(textures_arr[i]) - 4, ".xpm", 4))
+        {
+            print_error("Las texturas deben ser archivos .xpm");
+        }
+        i++;
+    }
+       
 }
 
 void fill_text_and_colors(t_map *map, char *path)
@@ -96,7 +113,7 @@ void fill_text_and_colors(t_map *map, char *path)
     
     fd = open(path, O_RDONLY);
     if (fd < 0)
-        print_error();
+        print_error("nose puedo abrir el archivo");
     while(1)
     {
         line = get_next_line(fd);
@@ -112,6 +129,7 @@ void fill_text_and_colors(t_map *map, char *path)
 			fill_color(map, line);
         free(line);
     }
+    validate_text(map->textures);
     close(fd);
 }
 
@@ -126,7 +144,6 @@ int matrix_line(char *line)
             line[i] = '0';
         i++;
     }
-
     if (i == (int)ft_strlen(line) && i != 0)
         return (1);
     else
@@ -140,7 +157,7 @@ void fill_matrix(t_map *map, char *path)
     
     fd = open(path, O_RDONLY);
     if (fd < 0)
-        print_error();
+        print_error("No se puedo abrir el archivo");
     while(1)
     {
         line = get_next_line(fd);
@@ -151,7 +168,7 @@ void fill_matrix(t_map *map, char *path)
         {
             map->matrix = ft_arraypush(map->matrix, ft_strdup(line));
             if (!map->matrix)
-                print_error();
+                print_error("No se ha podido crear la matriz");
             if ((int)ft_strlen(line) > map->width)
                 map->width = (int)ft_strlen(line);
             map->height++;      
@@ -162,40 +179,50 @@ void fill_matrix(t_map *map, char *path)
 }
 void fill_player_vars(t_map *map)
 {
-    int i = 0;
-    int j = 0;
+    size_t  i;
+    int     j;
+    size_t  len;
     
-    while(map->matrix[i] != NULL)
+    i = 0;
+    j = 0;
+    len = 0;
+    while (j < map->height)
     {
-        while(map->matrix[i][j] != '\0')
+        i = 0;
+        len = ft_strlen(map->matrix[j]);
+        while (i < len)
         {
-            if(map->matrix[i][j] == 'N' || map->matrix[i][j] == 'S'
-                || map->matrix[i][j] == 'E' || map->matrix[i][j] == 'W')
+            if (map->matrix[j][i] == 'N' || map->matrix[j][i] == 'S'
+                || map->matrix[j][i] == 'E' || map->matrix[j][i] == 'W')
             {
-                map->player_x = j;
-                map->player_y = i;
-                map->player_dir = map->matrix[i][j];
-            }   
-            j++;
+                map->player_y = j;
+                map->player_x = i;
+                if (map->player_dir == '0')
+                    map->player_dir = map->matrix[j][i];
+                else
+                    print_error("Solo se puee tener una posicion de jugador");
+            }
+            i++;
         }
-        i++;
+        j++;
     }
 }
 t_map *map(char *path)
 {
     t_map *map;
 
-    map = ft_calloc(1, sizeof(t_map *));
+    map = ft_calloc(1, sizeof(t_map));
+    map->player_dir = '0';
     map->textures = ft_calloc(4, sizeof(char *));
     if (map->textures == NULL)
-        print_error();
+        print_error("No se ha podido crear el array de texturasr");
     map->matrix = ft_calloc(1, sizeof(char *));
     if (map->matrix == NULL) 
-        print_error();
+        print_error("No se ha podido crear la matriz");
     fill_text_and_colors(map, path);
     fill_matrix(map, path);
     fill_player_vars(map);
-    //validate_map(&map);
+    //validate_map(map);
     
     printf("ceiling: %x\n", map->ceiling);
     printf("floor: %x\n", map->floor);
@@ -221,7 +248,7 @@ t_cub3d *init_cub3d(char *path)
     cub3d = ft_calloc(1, sizeof(t_cub3d));
     if (!cub3d)
     {
-       print_error();
+       print_error("");
     }
     cub3d->map = map(path);
     if (!cub3d->map)

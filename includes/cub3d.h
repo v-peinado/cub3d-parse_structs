@@ -34,6 +34,6 @@ typedef struct s_cub3d
 
 t_cub3d *init_cub3d(char *path);
 int parse_args(int argc, char **argv);
-void print_error();
+void print_error(char *err_msg);
 
 #endif

@@ -35,7 +35,7 @@ MLX_PATH = ${MLX_DIR}/libmlx.a
 #COMPILE
 
 GCC = gcc
-CFLAGS = -fsanitize=address -g3 -Wall -Werror -Wextra #-fsanitize=address -g3
+CFLAGS =  -Wall -Werror -Wextra -fsanitize=address -g3
 #MFLAGS = -L ${MLX_DIR} -lmlx -lXext -lX11 -lm -lbsd
 MFLAGS = -ldl -lmlx -L${MLX_DIR} -framework OpenGL -framework AppKit -lz
 LFLAGS:= -L $(LIBFT_DIR) -lft
