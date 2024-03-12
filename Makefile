@@ -13,7 +13,7 @@ INC = 	cub3d.h
 
 #SRC
 
-SRCS = main.c parse.c init.c
+SRCS = main.c init.c ceiling_and_floor.c error_exit.c map_1.c map_2.c map_utils.c player.c textures.c
 
 OBJ_FILES   = $(SRCS:.c=.o)
 SRC			= $(addprefix $(SRCS_DIR), $(SRCS))
@@ -27,7 +27,7 @@ LIBFT_MAKE = Makefile
 LIBFT_PATH = ${LIBFT_DIR}/libft.a
 
 #INC MINILIBX LINUX OR MAC
-MLX_DIR = ./minilibx
+MLX_DIR = ./minilibx-linux
 #MLX_DIR = ./minilibx
 MLX_MAKE = Makefile
 MLX_PATH = ${MLX_DIR}/libmlx.a
@@ -35,9 +35,9 @@ MLX_PATH = ${MLX_DIR}/libmlx.a
 #COMPILE
 
 GCC = gcc
-CFLAGS =  -Wall -Werror -Wextra -fsanitize=address -g3
-#MFLAGS = -L ${MLX_DIR} -lmlx -lXext -lX11 -lm -lbsd
-MFLAGS = -ldl -lmlx -L${MLX_DIR} -framework OpenGL -framework AppKit -lz
+CFLAGS =  -Wall -Werror -Wextra #-fsanitize=address -g3
+MFLAGS = -L ${MLX_DIR} -lmlx -lXext -lX11 -lm -lbsd
+#MFLAGS = -ldl -lmlx -L${MLX_DIR} -framework OpenGL -framework AppKit -lz
 LFLAGS:= -L $(LIBFT_DIR) -lft
 RM = rm -f
 
