@@ -51,5 +51,9 @@ int rgb_range(int rgb);
 int solo_falta_matrix(t_map *map);
 void fill_texture(t_map *map, char *line);
 void validate_text(char **textures_arr);
+void free_cub3d(t_cub3d *cub3d);
+char	*ft_strtrim2(char *s1, char *set);
+int is_empty_line_and_free(char *line);
+int    ft_isdigit_string2(char *str);
 
 #endif
