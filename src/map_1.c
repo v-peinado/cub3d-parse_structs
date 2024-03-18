@@ -6,7 +6,7 @@
 /*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 19:39:31 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/03/12 20:15:51 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/18 20:54:40 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void validate_chars(t_map *map)
         while (j < len)
         {
             if (map->matrix[i][j] == ' ')
-                map->matrix[i][j] = '1';
+                map->matrix[i][j] = '0';
             if (map->matrix[i][j] != '1' && map->matrix[i][j] != '0'
                 && map->matrix[i][j] != 'N'
                 && map->matrix[i][j] != 'S' && map->matrix[i][j] != 'E'
@@ -83,14 +83,12 @@ void fill_map(t_map *map, char *path)
         line = get_next_line(fd);
         if (!line)
             break ;
+        if(is_empty_line_and_free(line))
+            continue ;
         if(solo_falta_matrix(map))
-            line = ft_strtrim(line, "\t\n");
+            line = ft_strtrim2(line, "\t\n");
         else
-            line = ft_strtrim(line, " \t\n");
-        while(line[i] == ' ')
-            i++;
-        if (line[i] == '\0')
-            continue;
+            line = ft_strtrim2(line, " \t\n");
         fill_map_append(map, line, i);
         free(line);
     }

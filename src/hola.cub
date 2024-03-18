@@ -2,9 +2,31 @@ NO ./src/textures/north.xpm
        SO            ./src/textures/south.xpm
 EA                         ./src/textures/east.xpm
 W   ./src/textures/west.xpm
-        F                             204,             192          ,0
+        F                             204,                                                                     192                                  ,0
+C 225,                                                     30,1
 
-C 225,30,1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         111111111111111111111111
         1000000000110000000000001

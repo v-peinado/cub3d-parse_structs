@@ -6,7 +6,7 @@
 /*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 13:00:42 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/03/12 19:34:15 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/03/17 20:53:03 by vpeinado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ int parse_args(int argc, char **argv)
 int main(int argc, char **argv)
 {
     t_cub3d *cub3d;
-    
     if (!parse_args(argc, argv))
         print_error("Los argumentos no son validos");
     cub3d = init_cub3d(argv[1]);
     if (!cub3d)
         print_error("No se pudo crear la estructura cub3d");
+    free_cub3d(cub3d);
     exit(EXIT_SUCCESS);
 }
